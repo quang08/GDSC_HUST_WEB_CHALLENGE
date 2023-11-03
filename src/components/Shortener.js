@@ -4,8 +4,28 @@ import bgDesktop from "../images/bg-shorten-desktop.svg"
 
 function Shortener() {
     const [text, setText] = useState("")
+    const [links, setLinks] = useState("")
+    const [buttonText, setButtonText] = useState("Copy")
 
-    const handleSubmit = (e) => {}
+    const handleSubmit = (e) => {
+        e.preventDefault()
+
+        if (!text) {
+            alert("Input is empty")
+        } else {
+            const shortenLink = async () => {
+                setLinks(text);
+                setText("")
+            }
+
+            shortenLink()
+        }
+    }
+
+    const handleCopy = () => {
+        navigator.clipboard.writeText(links)
+        setButtonText("Copied!")
+    }
 
     return (
         <>
@@ -32,7 +52,33 @@ function Shortener() {
                             Shorten It!
                         </button>
                     </div>
-                </form>       
+                </form>
+
+                {links && (
+                    <div className="flex flex-col items-center justify-center bg-white text-center md:flex-row md:justify-between p-3 mt-3 rounded-lg shadow">
+                        <article>
+                            <h6 className="mb-3 md:mb-0">{links}</h6>
+                        </article>
+
+                        <article>
+                            <ul className="md:flex md:items-center">
+                                <li className="md:mr-5">
+                                    <button className="text-cyan-500">
+                                        {links}
+                                    </button>
+                                </li>
+                                <li>
+                                    <button
+                                        onClick={handleCopy}
+                                        className="btn-cta rounded-lg text-sm focus:bg-slate-800"
+                                    >
+                                        {buttonText}
+                                    </button>
+                                </li>
+                            </ul>
+                        </article>
+                    </div>
+                )}
             </section>
         </>
     )
