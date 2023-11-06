@@ -1,31 +1,58 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import bgMobile from "../images/bg-shorten-mobile.svg"
 import bgDesktop from "../images/bg-shorten-desktop.svg"
+
+const getLocalStorage = () => {
+    let links = localStorage.getItem("links")
+
+    if (links) {
+        return JSON.parse(localStorage.getItem("links"))
+    } else {
+        return []
+    }
+}
 
 function Shortener() {
     const [text, setText] = useState("")
     const [links, setLinks] = useState("")
     const [buttonText, setButtonText] = useState("Copy")
 
-    const handleSubmit = (e) => {
-        e.preventDefault()
+    const handleSubmit = async (e) => {
+        e.preventDefault();
 
         if (!text) {
-            alert("Input is empty")
+            alert("Input is empty");
         } else {
             const shortenLink = async () => {
-                setLinks(text);
-                setText("")
-            }
+                try {
+                    const res = await fetch('https://owo.vc/api/v2/link', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ link: `https://${text}`, generator: "owo", metadata: "OWOIFY" }),
+                    })
+                    const data = await res.json()
+                    console.log(data.id)
+                    setLinks(data.id)
+                    setText("")
 
-            shortenLink()
+                } catch (e) {
+                    console.log(e);
+                }
+            };
+
+            shortenLink();
         }
-    }
+    };
+
 
     const handleCopy = () => {
         navigator.clipboard.writeText(links)
         setButtonText("Copied!")
     }
+
+    // useEffect(() => {
+    //     localStorage.setItem("links", JSON.stringify(links))
+    // }, [links])
 
     return (
         <>
