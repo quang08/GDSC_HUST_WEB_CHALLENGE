@@ -21,7 +21,7 @@ function Shortener() {
                     body: JSON.stringify({ link: `https://${text}`, generator: "owo", metadata: "OWOIFY" }),
                 })
                 const data = await res.json()
-                data.ok ? setLinks([...links, data.id]) : setError(true);
+                data.id ? setLinks([...links, data]) : setError(true);
                 setText("")
 
             } catch (e) {
@@ -77,29 +77,34 @@ function Shortener() {
                     </div>
                 </form>
 
+                <div className="max-h-24 overflow-y-scroll">
+                    {links.length !== 0 &&
+                        links.map((link) => (
+                            <div className="flex flex-col items-center justify-center bg-white text-center md:flex-row md:justify-between p-3 mt-3 rounded-lg shadow">
+                                <article>
+                                    <h6 className="mb-3 md:mb-0">{link.destination}</h6>
+                                </article>
 
-                <div className="flex flex-col items-center justify-center bg-white text-center md:flex-row md:justify-between p-3 mt-3 rounded-lg shadow">
-                    <article>
-                        <h6 className="mb-3 md:mb-0">{links}</h6>
-                    </article>
-
-                    <article>
-                        <ul className="md:flex md:items-center">
-                            <li className="md:mr-5">
-                                <button className="text-cyan-500">
-                                    {links}
-                                </button>
-                            </li>
-                            <li>
-                                <button
-                                    onClick={handleCopy}
-                                    className="btn-cta rounded-lg text-sm focus:bg-slate-800"
-                                >
-                                    {buttonText}
-                                </button>
-                            </li>
-                        </ul>
-                    </article>
+                                <article>
+                                    <ul className="md:flex md:items-center">
+                                        <li className="md:mr-5">
+                                            <button className="text-cyan-500">
+                                                {link.id}
+                                            </button>
+                                        </li>
+                                        <li>
+                                            <button
+                                                onClick={handleCopy}
+                                                className="btn-cta rounded-lg text-sm focus:bg-slate-800"
+                                            >
+                                                {buttonText}
+                                            </button>
+                                        </li>
+                                    </ul>
+                                </article>
+                            </div>
+                        ))
+                    }
                 </div>
 
             </section>
